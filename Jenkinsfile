@@ -1,27 +1,32 @@
-node {
- stage('checkout') {
-  checkout scm
- }
- 
- stage('test'){
- 	mvn test;
- }
- 
- stage('deploy') {
-  echo 'branch name ' + env.BRANCH_NAME
- 
-  if (env.BRANCH_NAME.startsWith("Feature_")) {
-   echo "Deploying to Dev environment after build"
-  } else if (env.BRANCH_NAME.startsWith("Release_")) {
-   echo "Deploying to Stage after build and Dev Deployment"
-  } else if (env.BRANCH_NAME.startsWith("master")) {
-   echo "Deploying to PROD environment"
-  }
- 
-  sh ""
-  "chmod +x HelloWorld.sh 
-  . / HelloWorld.sh ""
-  "
- 
- }
+pipeline {
+   agent any
+
+   tools {
+      // Install the Maven version configured as "M3" and add it to the path.
+      maven "M3"
+   }
+
+   stages {
+      stage('Build') {
+         steps {
+            // Get some code from a GitHub repository
+            git 'https://github.com/ChuyAMS/spring-boot-app-demo.git'
+
+            // Run Maven on a Unix agent.
+            sh "mvn -Dmaven.test.failure.ignore=true clean package"
+
+            // To run Maven on a Windows agent, use
+            // bat "mvn -Dmaven.test.failure.ignore=true clean package"
+         }
+
+         post {
+            // If Maven was able to run the tests, even if some of the test
+            // failed, record the test results and archive the jar file.
+            success {
+               junit '**/target/surefire-reports/TEST-*.xml'
+               archiveArtifacts 'target/*.jar'
+            }
+         }
+      }
+   }
 }

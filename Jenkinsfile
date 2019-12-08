@@ -12,6 +12,8 @@ pipeline {
          	checkout scm
       
          	echo 'branch name ' + env.BRANCH_NAME
+
+                echo sh(script: 'env|sort', returnStdout: true)
          }
       }
       stage('Build') {

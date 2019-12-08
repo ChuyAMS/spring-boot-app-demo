@@ -8,9 +8,11 @@ pipeline {
    
    stages {
       stage('checkout') {
-         checkout scm
+         steps {
+         	checkout scm
       
-         echo 'branch name ' + env.BRANCH_NAME
+         	echo 'branch name ' + env.BRANCH_NAME
+         }
       }
       stage('Build') {
          steps {

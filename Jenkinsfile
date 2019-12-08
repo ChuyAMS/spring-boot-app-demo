@@ -6,13 +6,12 @@ pipeline {
       maven "M3"
    }
    
-   stage('checkout') {
-      checkout scm
-      
-      echo 'branch name ' + env.BRANCH_NAME
-   }
-
    stages {
+      stage('checkout') {
+         checkout scm
+      
+         echo 'branch name ' + env.BRANCH_NAME
+      }
       stage('Build') {
          steps {
             // Get some code from a GitHub repository

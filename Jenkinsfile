@@ -5,12 +5,18 @@ pipeline {
       // Install the Maven version configured as "M3" and add it to the path.
       maven "M3"
    }
+   
+   stage('checkout') {
+      checkout scm
+      
+      echo 'branch name ' + env.BRANCH_NAME
+   }
 
    stages {
       stage('Build') {
          steps {
             // Get some code from a GitHub repository
-            git 'https://github.com/ChuyAMS/spring-boot-app-demo.git'
+            //git 'https://github.com/ChuyAMS/spring-boot-app-demo.git'
 
             // Run Maven on a Unix agent.
             sh "mvn -Dmaven.test.failure.ignore=true clean package"

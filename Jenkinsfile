@@ -25,7 +25,7 @@ pipeline {
             sh "mvn -Dmaven.test.failure.ignore=true clean package"
 
             // To run Maven on a Windows agent, use
-            // bat "mvn -Dmaven.test.failure.ignore=true clean package"
+            // bat "mvn clean package"
          }
 
          post {
@@ -36,6 +36,17 @@ pipeline {
                archiveArtifacts 'target/*.jar'
             }
          }
+      }
+      
+      stage('Deploy') {
+         steps {
+
+			echo 'Deploying branch ${BRANCH_NAME}'
+			
+			//Execute deploy script
+			//sh './deploy ${BRANCH_NAME}'
+         }
+
       }
    }
 }
